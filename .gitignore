@@ -3,3 +3,7 @@
 
 ### Ignore meta (Unity)
 *.meta
+
+### Ignore C# project artifacts
+[Bb]in/
+[Oo]bj/
