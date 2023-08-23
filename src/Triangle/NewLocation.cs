@@ -2270,6 +2270,7 @@ namespace TriangleNet
                     break;
             }
             tempotri = badotri;
+            Otri previousOTri = tempotri;
             // add first point as the end of first edge
             points[numvertices] = second_x;
             numvertices++;
@@ -2283,6 +2284,15 @@ namespace TriangleNet
                 // find the neighbor's third point where it is incident to given edge
                 if (!GetNeighborsVertex(tempotri, first_x, first_y, second_x, second_y, ref returnPoint, ref neighotri))
                 {
+                    // prevents endless cycle when two triangles stick together (when T1 and T2 have Two Adjacent edges).
+                    // once it was noticed that TriangleNet contour triangulation algorithm produced such invalid topology for a valid contour.
+                    if (previousOTri.tri.hash == neighotri.tri.hash)
+                    {
+                        numvertices = 0;
+                        break;
+                    }
+                    previousOTri = tempotri;
+
                     // go to next triangle
                     tempotri = neighotri;
                     // now the second point is the neighbor's third vertex
