@@ -69,5 +69,15 @@ namespace TriangleNet.Meshing
         /// used (Ruppert's algorithm). Otherwise the aCute algorithm is used.
         /// </remarks>
         public bool UseLegacyRefinement { get; set; }
+
+        /// <summary>
+        /// max reasonable number of mesh modification iterations. when exceeded - throws an exception.
+        /// </summary>
+        public int LimitIterationsToPreventEndlessLoop { get; set; } = int.MaxValue;
+
+        /// <summary>
+        /// whether to throw exception (==True) or quit the loop (==False) when the iterations limit is over
+        /// </summary>
+        public bool ThrowExceptionOnEndlessLoop { get; set; } = false;
     }
 }

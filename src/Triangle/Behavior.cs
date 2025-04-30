@@ -207,6 +207,10 @@ namespace TriangleNet
         /// </summary>
         public bool Jettison { get; set; } = false;
 
+        public int LimitIterationsToPreventEndlessLoop { get; set; } = int.MaxValue;
+
+        public bool ThrowExceptionOnEndlessLoop { get; set; } = false;
+
         #endregion
     }
 }

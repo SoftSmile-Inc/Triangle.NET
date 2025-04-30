@@ -68,6 +68,8 @@ namespace TriangleNet.Meshing
                 behavior.UserTest = quality.UserTest;
                 behavior.Exclude = quality.Exclude;
                 behavior.VarArea = quality.VariableArea;
+                behavior.LimitIterationsToPreventEndlessLoop = quality.LimitIterationsToPreventEndlessLoop;
+                behavior.ThrowExceptionOnEndlessLoop = quality.ThrowExceptionOnEndlessLoop;
 
                 behavior.ConformingDelaunay = behavior.ConformingDelaunay || delaunay;
 
@@ -853,6 +855,8 @@ namespace TriangleNet.Meshing
             // At this point, if we haven't run out of Steiner points, the
             // triangulation should be (conforming) Delaunay.
 
+            int remainingIterationsCounter = behavior.LimitIterationsToPreventEndlessLoop;
+
             // Next, we worry about enforcing triangle quality.
             if ((behavior.MinAngle > 0.0) || behavior.VarArea || behavior.fixedArea || behavior.UserTest != null)
             {
@@ -875,6 +879,15 @@ namespace TriangleNet.Meshing
                         // Fix any encroached subsegments that resulted.
                         // Record any new bad triangles that result.
                         SplitEncSegs(true);
+                    }
+
+                    // endless loop check
+                    if ((--remainingIterationsCounter) == 0)
+                    {
+                        if (behavior.ThrowExceptionOnEndlessLoop)
+                            throw new Exception("Endless loop detected");
+                        else
+                            break; // exit loop (supposedly, the result mesh is kept valid during the loop
                     }
                 }
             }
